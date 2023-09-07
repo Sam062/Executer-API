@@ -1,17 +1,20 @@
 package base;
 
-public class EmailSender implements Runnable {
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-	Employee e;
+public class EmailSender {
 
-	public EmailSender(Employee emp) {
-		e = emp;
-	}
+	public void sendBulkEmail(List<Employee> empsList, String subject) {
+		final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-	@Override
-	public void run() {
-//		System.out.println("Calling send email() = " + e.getName());
-		sendEmail(String.valueOf(e.getName()), e.getName() + "SUBJECT", e.toString());
+		for (Employee employee : empsList) {
+			// Format the email body here
+			String body = "EMAIL BODY-TESTING BODY";
+
+			executorService.submit(() -> sendEmail(String.valueOf(employee.getName()), subject, body));
+		}
 	}
 
 	public void sendEmail(String to, String subject, String body) {
